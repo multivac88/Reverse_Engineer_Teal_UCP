@@ -1,13 +1,13 @@
 from pyteal import *
 
 def approval_program():
-	gstate = Bytes("gstate")
-	recovery = Bytes("recovery")
-	wait_time = Bytes("wait_time")
-	vault = Bytes("vault")
-	amount = Bytes("amount")
-	receiver = Bytes("receiver")
-	request_time = Bytes("request_time")
+    gstate = Bytes("gstate")
+    recovery = Bytes("recovery")
+    wait_time = Bytes("wait_time")
+    vault = Bytes("vault")
+    amount = Bytes("amount")
+    receiver = Bytes("receiver")
+    request_time = Bytes("request_time")
 
     # create_vault_checks
     If(Global.group_size() == Int(1)).Else(not_create),
@@ -90,7 +90,7 @@ def approval_program():
 	# not_cancel label 
     Err()
 	
-	return compileTeal(program, Mode.Application, version=4)
+    return compileTeal(program, Mode.Application, version=4)
 
 def clear_state_program():
 	program = Return(Int(1))
