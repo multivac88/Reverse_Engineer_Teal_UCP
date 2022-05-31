@@ -1,13 +1,13 @@
 from pyteal import *
 
 def approval_program():
-	gstate = Bytes("gstate")
-	recovery = Bytes("recovery")
-	wait_time = Bytes("wait_time")
-	vault = Bytes("vault")
-	amount = Bytes("amount")
-	receiver = Bytes("receiver")
-	request_time = Bytes("request_time")
+    gstate = Bytes("gstate")
+    recovery = Bytes("recovery")
+    wait_time = Bytes("wait_time")
+    vault = Bytes("vault")
+    amount = Bytes("amount")
+    receiver = Bytes("receiver")
+    request_time = Bytes("request_time")
 
     create_vault_checks = And(
         If(Global.group_size() == Int(1)).Else(not_create),
@@ -26,7 +26,7 @@ def approval_program():
     
 	
 
-	not_create_checks = And(
+    not_create_checks = And(
         If(Global.group_size() == Int(2)).Else(not_setescrow),
         If(App.globalGet(gstate) == Bytes("init_escrow")).Else(not_setescrow),
         If(Txn.on_completion() == OnComplete.NoOp).Else(not_setescrow),
@@ -65,7 +65,7 @@ def approval_program():
     )
 
     # finalizing a withdrawal
-	not_withdraw_checks = And(
+    not_withdraw_checks = And(
         If(Global.group_size() == Int(2)).Else(not_finalize),
         If(App.globalGet(gstate) == Bytes("requested")).Else(not_finalize),
         If(Txn.on_completion() == OnComplete.NoOp).Else(not_finalize),
@@ -88,7 +88,7 @@ def approval_program():
 	
 
     # cancelling a withdrawal
-	not_finalize_checks = And(
+    not_finalize_checks = And(
         If(Global.group_size() == Int(1)).Else(not_cancel),
         If(App.globalGet(gstate) == Bytes("requested")).Else(not_cancel),
         If(Txn.on_completion() == OnComplete.NoOp).Else(not_cancel),
@@ -103,18 +103,18 @@ def approval_program():
         Approve(),
     )
 
-	program = Cond(
-		[create_vault_checks, create_vault],
-		[not_create_checks, not_create],
-		[not_setescrow_checks, not_setescrow],
-		[not_withdraw_checks, not_withdraw],
-		[not_finalize_checks, not_finalize],
-		# error if reached (not_cancel)
-	)
+    program = Cond(
+	[create_vault_checks, create_vault],
+	[not_create_checks, not_create],
+	[not_setescrow_checks, not_setescrow],
+	[not_withdraw_checks, not_withdraw],
+	[not_finalize_checks, not_finalize],
+	# error if reached (not_cancel)
+    )
 	
-	return compileTeal(program, Mode.Application, version=4)
+    return compileTeal(program, Mode.Application, version=4)
 
 def clear_state_program():
-	program = Return(Int(1))
+    program = Return(Int(1))
 	
-	return compileTeal(program, Mode.Application, version=4)
+    return compileTeal(program, Mode.Application, version=4)
